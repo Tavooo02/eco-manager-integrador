@@ -1,187 +1,259 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import './index.css';
 
-function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mensaje, setMensaje] = useState('');
-  const [logueado, setLogueado] = useState(false);
-
-  // Historia de Usuario 2: Crear usuario 
-  // Programadores: Santiago Alcaraz, Gustavo Hoyos 
-  const handleRegister = async () => {
-    try {
-      const res = await axios.post('http://localhost:5000/api/register', { email, password });
-      setMensaje(res.data.message);
-    } catch (err) {
-      // Si el correo ya está en la base de datos, salta el mensaje de error 
-      setMensaje(err.response.data.error); 
-    }
-  };
-
-  // Historia de Usuario 1: Login 
-  // Programadores: Santiago Alcaraz, Gustavo Hoyos 
-  const handleLogin = async () => {
-    try {
-      const res = await axios.post('http://localhost:5000/api/login', { email, password });
-      setMensaje(res.data.message);
-      // Si la validación es exitosa, permite ingresar al menú principal 
-      setLogueado(true); 
-    } catch (err) {
-      // De lo contrario, salta un mensaje de error 
-      setMensaje(err.response.data.error); 
-      setLogueado(false);
-    }
-  };
-
-  // Interfaz del Menú Principal (Validación exitosa Historia 1) 
-  if (logueado) {
-  return (
-    <div style={styles.container}>
-      <nav style={styles.nav}>
-        <span style={styles.logo}>⚡ EcoManager</span>
-        <button onClick={() => setLogueado(false)} style={styles.logoutBtn}>Cerrar Sesión</button>
-      </nav>
-
-      <div style={styles.main}>
-        <header style={styles.header}>
-          <h2>Gestión de Eficiencia Energética</h2>
-          <p>Bienvenido, <strong>{email}</strong>. Monitorea tu consumo actual.</p>
-        </header>
-
-        <section style={styles.card}>
-          <h3 style={styles.cardTitle}>Registro de Factura (Colombia)</h3>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Consumo del mes (kWh):</label>
-            <input type="number" id="kwh" placeholder="Ej: 150" style={styles.input} />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Valor total de la factura (COP):</label>
-            <input type="number" id="cost" placeholder="Ej: 120000" style={styles.input} />
-          </div>
-
-          <button onClick={async () => {
-            const kwh = document.getElementById('kwh').value;
-            const cost = document.getElementById('cost').value;
-            try {
-              const res = await axios.post('http://localhost:5000/api/save-consumption', { email, kwh, cost });
-              alert(`¡Datos Guardados!\nImpacto Ambiental: ${res.data.footprint} kg CO2\nAhorro Potencial: ${res.data.savingPotential} kWh`);
-            } catch (err) {
-              alert("Error de conexión");
-            }
-          }} style={styles.primaryBtn}>
-            Calcular y Guardar Registro
-          </button>
-        </section>
+// --- 1. COMPONENTE: INICIO (Estilo SaaS Profesional) ---
+const Home = ({ setView }) => (
+  <div className="landing-wrapper">
+    <nav className="navbar">
+      <div className="nav-left"><h1 className="logo">EcoManager</h1></div>
+      <div className="nav-btns">
+        <button onClick={() => setView('login')} className="link-text">Iniciar Sesión</button>
+        <button onClick={() => setView('register')} className="cta-navbar">Registrarse Gratis</button>
       </div>
-    </div>
-  );
-}
+    </nav>
+    
+    {/* Sección Principal (Hero) */}
+    <header className="hero-section">
+      <div className="hero-content">
+        <h2 className="hero-badge">PLATAFORMA DE SOSTENIBILIDAD DOMÉSTICA</h2>
+        <h1 className="hero-main-text">Transforma tu consumo eléctrico en acción climática.</h1>
+        <p className="hero-subtext">
+          EcoManager es el sistema integral que te permite registrar tus facturas, calcular tu huella de carbono exacta y descubrir tu potencial de ahorro real. Analiza tus datos y toma el control de tu energía.
+        </p>
+        <div className="hero-actions">
+          <button onClick={() => setView('register')} className="btn-blue btn-large">Comenzar Ahora</button>
+          <button onClick={() => setView('login')} className="btn-outline btn-large">Ir al Dashboard</button>
+        </div>
+      </div>
+    </header>
 
-  // Interfaz de Autenticación (Login y Registro)
+    {/* Sección de Características (Lo que le ofrecemos al usuario) */}
+    <section className="features-section">
+      <div className="section-header">
+        <h2>Todo lo que necesitas para gestionar tu eficiencia</h2>
+        <p>Herramientas diseñadas para darte visibilidad total sobre tu impacto ambiental y tu economía del hogar.</p>
+      </div>
+      
+      <div className="features-grid">
+        <div className="feature-card">
+          <div className="feature-icon">⚡</div>
+          <h3>Monitoreo de Consumo</h3>
+          <p>Registra el valor de tu factura y los kilovatios-hora (kWh) consumidos mensualmente. Mantén un historial estructurado para analizar tus picos de consumo a lo largo del tiempo.</p>
+        </div>
+        <div className="feature-card">
+          <div className="feature-icon">🌍</div>
+          <h3>Conversor de Impacto</h3>
+          <p>Traducimos tu consumo eléctrico a emisiones de CO2 utilizando factores de emisión estandarizados. Conoce exactamente cuál es tu huella de carbono generada por la red eléctrica.</p>
+        </div>
+        <div className="feature-card">
+          <div className="feature-icon">📉</div>
+          <h3>Proyección de Ahorro</h3>
+          <p>Nuestro motor de cálculo procesa tus datos para establecer escenarios eficientes, proyectando metas de ahorro viables para reducir tanto tus emisiones como el costo económico.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Llamado a la acción final */}
+    <section className="bottom-cta">
+      <h2>¿Listo para optimizar los recursos de tu hogar?</h2>
+      <button onClick={() => setView('register')} className="btn-blue btn-large" style={{marginTop: '20px'}}>Crear cuenta gratuita</button>
+    </section>
+    
+    <footer className="footer-simple">
+      <p>© 2026 EcoManager. Todos los derechos reservados.</p>
+    </footer>
+  </div>
+);
+
+// --- 2. COMPONENTE: DASHBOARD ---
+const Dashboard = ({ setView, userEmail }) => {
+  const [loading, setLoading] = useState(true);
+  const [kwh, setKwh] = useState('');
+  const [cost, setCost] = useState('');
+  const [resultados, setResultados] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); 
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleCalcularYGuardar = async () => {
+    if (!kwh || !cost) {
+      alert("Por favor ingrese ambos valores.");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/save-consumption', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, kwh: Number(kwh), cost: Number(cost) })
+      });
+      const data = await response.json();
+      
+      if (response.ok) {
+        setResultados({
+          footprint: data.footprint,
+          savingPotential: data.savingPotential
+        });
+        alert(data.message); 
+      } else {
+        alert("Error al guardar el registro.");
+      }
+    } catch (error) {
+      alert("Error al conectar con el motor de cálculo");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="auth-full">
+        <div className="loader-container">
+          <div className="spinner"></div>
+          <p>Generando resultados...</p>
+          <small>Tiempo de recuperación estimado: 2 segundos</small>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={styles.container}>
-      <nav style={styles.nav}>
-        <span style={styles.logo}>⚡ EcoManager</span>
+    <div className="dashboard-wrapper">
+      <nav className="navbar">
+        <div className="nav-left">
+          <h1 className="logo" style={{color: '#4ade80'}}>EcoManager</h1>
+        </div>
+        <button onClick={() => setView('home')} className="link-text">Cerrar Sesión</button>
       </nav>
-      <div style={{...styles.main, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh'}}>
-        <div style={{...styles.card, width: '100%', maxWidth: '400px'}}>
-          <h2 style={{...styles.cardTitle, textAlign: 'center', fontSize: '1.8rem'}}>Bienvenido</h2>
-          <p style={{textAlign: 'center', color: '#666', marginBottom: '25px'}}>Ingresa tus credenciales para gestionar tu eficiencia energética.</p>
-          
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Correo Electrónico</label>
+      
+      <div className="auth-full" style={{ alignItems: 'flex-start', paddingTop: '60px' }}>
+        <div className="dashboard-content" style={{ width: '100%', maxWidth: '600px' }}>
+          <h2 style={{ fontSize: '28px', marginBottom: '10px' }}>Gestión de Eficiencia Energética</h2>
+          <p style={{ color: '#ababab', marginBottom: '30px' }}>
+            Bienvenido, <strong>{userEmail}</strong>. Monitorea tu consumo actual.
+          </p>
+
+          <div className="auth-box" style={{ width: '100%', textAlign: 'left' }}>
+            <h3 style={{ color: '#4ade80', marginTop: '0', marginBottom: '20px' }}>Registro de Factura (Colombia)</h3>
+            
+            <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#ababab' }}>Consumo del mes (kWh):</label>
             <input 
-              type="email" 
-              placeholder="nombre@ejemplo.com" 
-              onChange={(e) => setEmail(e.target.value)} 
-              style={styles.input} 
+              type="number" 
+              placeholder="Ej: 150" 
+              className="input-modern" 
+              value={kwh} 
+              onChange={(e) => setKwh(e.target.value)} 
+              style={{ marginBottom: '15px' }}
             />
-          </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Contraseña</label>
+            <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#ababab' }}>Valor total de la factura (COP):</label>
             <input 
-              type="password" 
-              placeholder="••••••••" 
-              onChange={(e) => setPassword(e.target.value)} 
-              style={styles.input} 
+              type="number" 
+              placeholder="Ej: 120000" 
+              className="input-modern" 
+              value={cost} 
+              onChange={(e) => setCost(e.target.value)} 
+              style={{ marginBottom: '20px' }}
             />
-          </div>
 
-          <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px'}}>
-            <button onClick={handleLogin} style={styles.primaryBtn}>
-              Iniciar Sesión
+            <button 
+              onClick={handleCalcularYGuardar} 
+              className="btn-blue-full" 
+              style={{ backgroundColor: '#2e7d32' }}
+            >
+              Calcular y Guardar Registro
             </button>
-            <button onClick={handleRegister} style={{...styles.primaryBtn, backgroundColor: '#6c757d'}}>
-              Crear Cuenta Nueva
-            </button>
+            
+            {resultados && (
+              <div className="result-card" style={{ marginTop: '25px', borderColor: '#4ade80' }}>
+                <h4>Resultados del Análisis:</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#ababab' }}>Huella de Carbono</span>
+                    <p className="impact-value" style={{ color: '#ef4444', fontSize: '22px' }}>{resultados.footprint} kg CO2</p>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#ababab' }}>Meta de Ahorro (10%)</span>
+                    <p className="impact-value" style={{ color: '#4ade80', fontSize: '22px' }}>{resultados.savingPotential} kWh</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-
-          {mensaje && (
-            <div style={{
-              marginTop: '20px', 
-              padding: '10px', 
-              borderRadius: '6px', 
-              backgroundColor: '#ffebee', 
-              color: '#c62828', 
-              textAlign: 'center',
-              fontSize: '0.9rem',
-              border: '1px solid #ffcdd2'
-            }}>
-              {mensaje}
-            </div>
-          )}
         </div>
       </div>
     </div>
   );
-}
-
-const styles = {
-  container: {
-    backgroundColor: '#f4f7f6',
-    minHeight: '100vh',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  },
-  nav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '15px 50px',
-    backgroundColor: '#1a2e35',
-    color: 'white',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-  },
-  logo: { fontSize: '1.5rem', fontWeight: 'bold', color: '#4caf50' },
-  logoutBtn: { backgroundColor: 'transparent', color: 'white', border: '1px solid white', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer' },
-  main: { padding: '40px 10%' },
-  header: { marginBottom: '30px', color: '#333' },
-  card: {
-    backgroundColor: 'white',
-    padding: '30px',
-    borderRadius: '12px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    maxWidth: '500px',
-  },
-  cardTitle: { marginTop: 0, marginBottom: '20px', color: '#2e7d32' },
-  formGroup: { marginBottom: '15px' },
-  label: { display: 'block', marginBottom: '5px', fontWeight: '600', color: '#555' },
-  input: { width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '1rem' },
-  primaryBtn: {
-    width: '100%',
-    padding: '12px',
-    backgroundColor: '#2e7d32',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    marginTop: '10px',
-    transition: 'background 0.3s',
-  }
 };
+
+// --- COMPONENTES AUTH (Login / Register) ---
+const Login = ({ setView, formData, handleChange, handleAuth }) => (
+  <div className="auth-full">
+    <div className="auth-box">
+      <h2>Bienvenido</h2>
+      <input name="email" type="email" placeholder="Correo electrónico" className="input-modern" value={formData.email} onChange={handleChange} />
+      <input name="password" type="password" placeholder="Contraseña" className="input-modern" value={formData.password} onChange={handleChange} />
+      <button onClick={() => handleAuth('login')} className="btn-blue-full">Entrar</button>
+      <p onClick={() => setView('home')} className="back-home">← Volver al inicio</p>
+    </div>
+  </div>
+);
+
+const Register = ({ setView, formData, handleChange, handleAuth }) => (
+  <div className="auth-full">
+    <div className="auth-box">
+      <h2>Crear Cuenta</h2>
+      <input name="email" type="email" placeholder="Correo electrónico" className="input-modern" value={formData.email} onChange={handleChange} />
+      <input name="password" type="password" placeholder="Contraseña" className="input-modern" value={formData.password} onChange={handleChange} />
+      <button onClick={() => handleAuth('register')} className="btn-blue-full">Registrarse</button>
+      <p onClick={() => setView('home')} className="back-home">← Volver al inicio</p>
+    </div>
+  </div>
+);
+
+// --- COMPONENTE PRINCIPAL ---
+function App() {
+  const [view, setView] = useState('home');
+  const [formData, setFormData] = useState({ email: '', password: '' });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAuth = async (endpoint) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        if(endpoint === 'register') {
+          alert("Usuario creado exitosamente. Ya puedes iniciar sesión.");
+          setView('login');
+        } else {
+          setView('dashboard'); 
+        }
+      } else {
+        alert("Error: " + (data.error || data.message));
+      }
+    } catch (error) {
+      alert("Error de conexión con el servidor.");
+    }
+  };
+
+  return (
+    <div className="App">
+      {view === 'home' && <Home setView={setView} />}
+      {view === 'login' && <Login setView={setView} formData={formData} handleChange={handleChange} handleAuth={handleAuth} />}
+      {view === 'register' && <Register setView={setView} formData={formData} handleChange={handleChange} handleAuth={handleAuth} />}
+      {view === 'dashboard' && <Dashboard setView={setView} userEmail={formData.email} />}
+    </div>
+  );
+}
 
 export default App;

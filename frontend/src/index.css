@@ -1,13 +1,71 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --primary-blue: #007bff;
+  --dark-blue: #0056b3;
+  --bg-dark: #0a0a0a;
+  --card-bg: #161b22;
+  --text-gray: #ababab;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: white; }
+
+/* Navbar */
+.navbar { display: flex; justify-content: space-between; padding: 15px 80px; background: rgba(13, 17, 23, 0.9); border-bottom: 1px solid #30363d; position: sticky; top: 0; }
+.logo { color: var(--primary-blue); font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -1px; }
+.link-text { background: none; border: none; color: white; margin: 0 15px; cursor: pointer; font-size: 14px; transition: 0.3s; }
+.link-text:hover { color: var(--primary-blue); }
+.cta-navbar { background: var(--primary-blue); color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+
+/* Hero */
+.hero-section { text-align: center; padding: 120px 20px; background: radial-gradient(circle at center, #112240 0%, #0a0a0a 70%); }
+.hero-title { color: var(--primary-blue); letter-spacing: 2px; font-size: 13px; font-weight: 700; }
+.hero-main-text { font-size: 60px; font-weight: 800; line-height: 1.1; margin: 20px 0; }
+.hero-subtext { color: var(--text-gray); font-size: 18px; max-width: 650px; margin: 0 auto 40px; line-height: 1.6; }
+.btn-blue { background: var(--primary-blue); color: white; border: none; padding: 16px 35px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-blue:hover { background: var(--dark-blue); }
+.btn-outline { background: none; border: 1px solid #30363d; color: white; padding: 16px 35px; border-radius: 6px; margin-left: 15px; cursor: default; opacity: 0.7; }
+
+/* Info Cards */
+.info-grid { display: flex; justify-content: center; gap: 25px; padding: 60px 80px; }
+.info-card { background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 300px; }
+.info-card h3 { color: white; margin-bottom: 15px; font-size: 20px; }
+.info-card p { color: var(--text-gray); font-size: 14px; line-height: 1.5; }
+
+/* Auth Views */
+.auth-full { height: 100vh; display: flex; align-items: center; justify-content: center; background: #0d1117; }
+.auth-box { background: #161b22; padding: 40px; border-radius: 12px; width: 340px; text-align: center; border: 1px solid #30363d; }
+.input-modern { width: 100%; padding: 12px; margin: 10px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 6px; box-sizing: border-box; outline: none; }
+.input-modern:focus { border-color: var(--primary-blue); }
+.btn-blue-full { width: 100%; padding: 12px; background: var(--primary-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+.back-home { color: #8b949e; font-size: 13px; cursor: pointer; margin-top: 25px; text-decoration: none; display: block; }
+
+/* --- ESTILOS SAAS PARA LA PÁGINA DE INICIO --- */
+
+.hero-badge { color: #4ade80; font-size: 12px; letter-spacing: 3px; font-weight: 700; margin-bottom: 25px; }
+.hero-content { max-width: 850px; margin: 0 auto; }
+.hero-actions { display: flex; gap: 20px; justify-content: center; margin-top: 40px; }
+.btn-large { padding: 16px 35px; font-size: 16px; border-radius: 8px; }
+
+/* Sección de Características */
+.features-section { padding: 100px 20px; background: #0d1117; text-align: center; border-top: 1px solid #30363d; }
+.section-header h2 { font-size: 32px; margin-bottom: 15px; font-weight: 700; }
+.section-header p { color: #ababab; font-size: 16px; max-width: 650px; margin: 0 auto 60px; line-height: 1.6; }
+
+.features-grid { display: flex; justify-content: center; gap: 30px; max-width: 1100px; margin: 0 auto; flex-wrap: wrap; }
+.feature-card { 
+  background: #161b22; 
+  border: 1px solid #30363d; 
+  border-radius: 12px; 
+  padding: 40px 30px; 
+  width: 300px; 
+  text-align: left; 
+  transition: transform 0.3s, border-color 0.3s; 
 }
+.feature-card:hover { transform: translateY(-5px); border-color: var(--primary-blue); }
+.feature-icon { font-size: 36px; margin-bottom: 20px; }
+.feature-card h3 { font-size: 20px; margin-bottom: 15px; color: white; }
+.feature-card p { color: #8b949e; line-height: 1.6; font-size: 14px; margin: 0; }
+
+/* Llamado a la acción inferior y Footer */
+.bottom-cta { padding: 100px 20px; text-align: center; background: radial-gradient(circle at top, #112240 0%, #0a0a0a 70%); border-top: 1px solid #30363d; }
+.bottom-cta h2 { font-size: 36px; margin-bottom: 20px; font-weight: 800; }
+.footer-simple { text-align: center; padding: 40px; color: #8b949e; font-size: 13px; border-top: 1px solid #30363d; background: #0d1117; }
